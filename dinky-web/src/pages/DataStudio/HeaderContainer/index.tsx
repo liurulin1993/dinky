@@ -20,8 +20,8 @@
 import { LoadingBtn } from '@/components/CallBackButton/LoadingBtn';
 import { PushpinIcon } from '@/components/Icons/CustomIcons';
 import { FlexCenterDiv } from '@/components/StyledComponents';
+import {getCurrentData, getCurrentTab, isDataStudioTabsItemType, mapDispatchToProps} from '@/pages/DataStudio/function';
 import { LeftBottomKey } from '@/pages/DataStudio/data.d';
-import { getCurrentData, getCurrentTab, mapDispatchToProps } from '@/pages/DataStudio/function';
 import Explain from '@/pages/DataStudio/HeaderContainer/Explain';
 import FlinkGraph from '@/pages/DataStudio/HeaderContainer/FlinkGraph';
 import {
@@ -51,7 +51,7 @@ import { isStatusDone } from '@/pages/DevOps/function';
 import { SysConfigStateType } from '@/pages/SettingCenter/GlobalSetting/model';
 import { SettingConfigKeyEnum } from '@/pages/SettingCenter/GlobalSetting/SettingOverView/constants';
 import { handleOption, handlePutDataJson, queryDataByParams } from '@/services/BusinessCrud';
-import { DIALECT } from '@/services/constants';
+import { DATETIME_FORMAT, DIALECT } from '@/services/constants';
 import { API_CONSTANTS } from '@/services/endpoints';
 import { Jobs } from '@/types/DevOps/data.d';
 import { ButtonRoute, DolphinTaskDefinition, DolphinTaskMinInfo } from '@/types/Studio/data.d';
@@ -60,7 +60,6 @@ import {
   ApartmentOutlined,
   BugOutlined,
   CaretRightFilled,
-  EnvironmentOutlined,
   FundOutlined,
   MergeCellsOutlined,
   MoreOutlined,
@@ -70,8 +69,19 @@ import {
   ScheduleOutlined
 } from '@ant-design/icons';
 import { connect } from '@umijs/max';
-import { Breadcrumb, Descriptions, Modal, Space } from 'antd';
-import React, { memo, useEffect, useState } from 'react';
+import {
+  ProForm, ProFormDateRangePicker, ProFormDateTimePicker,
+  ProFormRadio,
+  ProFormSelect,
+  ProFormTimePicker
+} from '@ant-design/pro-components';
+import { Breadcrumb, Descriptions, Modal, Space, RadioChangeEvent } from 'antd';
+import React, { memo, useEffect, useState ,useRef} from 'react';
+import type { ProFormInstance } from '@ant-design/pro-components';
+import {useForm} from "antd/es/form/Form";
+import {MONTH_CONTEXT_MENU, WEEK_CONTEXT_MENU} from "@/pages/DataStudio/HeaderContainer/constants";
+import {debounce} from "lodash";
+import dayjs from "dayjs";
 
 const headerStyle: React.CSSProperties = {
   display: 'inline-flex',
@@ -114,11 +124,13 @@ const HeaderContainer = (props: connect) => {
     currentDinkyTaskValue: {}
   });
 
+  const currentData = getCurrentData(panes, activeKey);
+
   useEffect(() => {
     queryDsConfig(SettingConfigKeyEnum.DOLPHIN_SCHEDULER.toLowerCase());
-  }, []);
+    form.setFieldsValue({ ...currentData?.scheduleConfig });
+  }, [currentData]);
 
-  const currentData = getCurrentData(panes, activeKey);
   const currentTab = getCurrentTab(panes, activeKey) as DataStudioTabsItemType;
 
   const handlePushDolphinOpen = async () => {
@@ -367,20 +379,23 @@ const HeaderContainer = (props: connect) => {
       icon: isOnline(currentData) ? <MergeCellsOutlined /> : <FundOutlined />,
       title: isOnline(currentData) ? l('button.offline') : l('button.publish'),
       isShow:
-        (currentTab?.type == TabsPageType.project &&
+        ((currentTab?.type == TabsPageType.project &&
           currentTab?.subType?.toLowerCase() === DIALECT.FLINK_SQL) ||
-        currentTab?.subType?.toLowerCase() === DIALECT.FLINKJAR,
-      click: () => handleChangeJobLife()
+          currentTab?.subType?.toLowerCase() === DIALECT.FLINKJAR) &&
+          currentTab?.params?.taskData?.type !== "local",
+      // click: () => handleChangeJobLife()
+      click: () => currentTab?.params?.taskData?.batchModel && !isOnline(currentData) ?showModal():handleChangeJobLife()
     },
     {
       // flink jobdetail跳转 运维
       icon: <RotateRightOutlined />,
       title: l('pages.datastudio.to.jobDetail'),
       isShow:
-        currentTab?.type == TabsPageType.project &&
-        currentData?.jobInstanceId &&
-        (currentTab?.subType?.toLowerCase() == DIALECT.FLINK_SQL ||
-          currentTab?.subType?.toLowerCase() == DIALECT.FLINKJAR),
+        // currentTab?.type == TabsPageType.project &&
+        // currentData?.jobInstanceId &&
+        // (currentTab?.subType?.toLowerCase() == DIALECT.FLINK_SQL ||
+        //   currentTab?.subType?.toLowerCase() == DIALECT.FLINKJAR),
+        false,
       props: {
         onClick: async () => {
           const dataByParams = await queryDataByParams<Jobs.JobInstance>(
@@ -407,7 +422,8 @@ const HeaderContainer = (props: connect) => {
         currentTab?.subType?.toLowerCase() !== DIALECT.JAVA &&
         currentTab?.subType?.toLowerCase() !== DIALECT.SCALA &&
         currentTab?.subType?.toLowerCase() !== DIALECT.PYTHON_LONG &&
-        currentTab?.subType?.toLowerCase() !== DIALECT.FLINKSQLENV,
+        currentTab?.subType?.toLowerCase() !== DIALECT.FLINKSQLENV &&
+        currentTab?.params?.taskData?.type === "local",
       props: {
         style: { background: '#52c41a' },
         type: 'primary'
@@ -424,7 +440,8 @@ const HeaderContainer = (props: connect) => {
         currentTab?.type == TabsPageType.project &&
         isStatusDone(currentData?.status) &&
         (currentTab?.subType?.toLowerCase() === DIALECT.FLINK_SQL ||
-          isSql(currentTab?.subType?.toLowerCase() ?? '')),
+          isSql(currentTab?.subType?.toLowerCase() ?? '')) &&
+        currentTab?.params?.taskData?.type === "local",
       props: {
         style: { background: '#52c41a' },
         type: 'primary'
@@ -455,28 +472,28 @@ const HeaderContainer = (props: connect) => {
   /**
    * @description: 生成面包屑
    */
-  const renderBreadcrumbItems = () => {
-    if (!activeBreadcrumbTitle) {
-      return (
-        <Space>
-          <EnvironmentOutlined />
-          <span>Guide Page</span>
-        </Space>
-      );
-    }
-
-    return (
-      <FlexCenterDiv style={{ width: (size.width - 2 * VIEW.paddingInline) / 2 }}>
-        {/*<Breadcrumb itemRender={(item, params, items, paths)=><span>{item.title}</span>} items={buildBreadcrumbItems(activeBreadcrumbTitle)} />*/}
-        <EnvironmentOutlined style={{ paddingRight: 20 }} />
-        <Breadcrumb
-          style={{ fontSize: 12, lineHeight: VIEW.headerHeight + 'px' }}
-          separator={'/'}
-          items={buildBreadcrumbItems(activeBreadcrumbTitle)}
-        />
-      </FlexCenterDiv>
-    );
-  };
+  // const renderBreadcrumbItems = () => {
+  //   if (!activeBreadcrumbTitle) {
+  //     return (
+  //       <Space>
+  //         <EnvironmentOutlined />
+  //         <span>Guide Page</span>
+  //       </Space>
+  //     );
+  //   }
+  //
+  //   return (
+  //     <FlexCenterDiv style={{ width: (size.width - 2 * VIEW.paddingInline) / 2 }}>
+  //       {/*<Breadcrumb itemRender={(item, params, items, paths)=><span>{item.title}</span>} items={buildBreadcrumbItems(activeBreadcrumbTitle)} />*/}
+  //       <EnvironmentOutlined style={{ paddingRight: 20 }} />
+  //       <Breadcrumb
+  //         style={{ fontSize: 12, lineHeight: VIEW.headerHeight + 'px' }}
+  //         separator={'/'}
+  //         items={buildBreadcrumbItems(activeBreadcrumbTitle)}
+  //       />
+  //     </FlexCenterDiv>
+  //   );
+  // };
 
   document.onkeydown = (e) => {
     routes
@@ -515,12 +532,70 @@ const HeaderContainer = (props: connect) => {
     await handlePushDolphinCancel();
   };
 
+  // 调度类型
+  const [value, setValue] = useState(0)
+
+  // 天
+  const [period, setPeriod] = useState('')
+
+  const [form] = useForm();
+
+  const formRef = useRef<ProFormInstance>();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //表单点击确认事件
+  const handleOk = () => {
+    console.log(currentData)
+      form.validateFields().then((value) => {
+        const arr = value.effectiveDate;
+        if(arr != null){
+          value.effectiveDateStart = dayjs(arr[0]).format(DATETIME_FORMAT);
+          value.effectiveDateEnd = dayjs(arr[1]).format(DATETIME_FORMAT);
+        }
+        currentData!.scheduleConfig = value;
+        value.periodTime = dayjs(value.periodTime).format(DATETIME_FORMAT);
+        handleChangeJobLife()
+        setIsModalOpen(false);
+      })
+  };
+  const handleCancel = () => {
+      setIsModalOpen(false);
+  };
+  const showModal = () => {
+      setIsModalOpen(true);
+  };
+
+  const onValuesChange = (change: { [key in string]: any }, all: any) => {
+    const pane = getCurrentTab(panes, activeKey);
+    if (!isDataStudioTabsItemType(pane)) {
+      return;
+    }
+
+
+    Object.keys(change).forEach((key) => {
+      if(!pane.params.taskData.scheduleConfig || pane.params.taskData.scheduleConfig=="null"){
+        pane.params.taskData.scheduleConfig = {}
+      }
+      if(key === "effectiveDate"){
+        pane.params.taskData.scheduleConfig.effectiveDateEnd = dayjs(all[key][0]).format(DATETIME_FORMAT);
+        pane.params.taskData.scheduleConfig.effectiveDateStart = dayjs(all[key][0]).format(DATETIME_FORMAT);
+      } else if(key === "periodTime"){
+        pane.params.taskData.scheduleConfig.periodTime = dayjs(all[key][0]).format(DATETIME_FORMAT);
+      } else{
+        pane.params.taskData.scheduleConfig[key] = all[key];
+      }
+
+    });
+    pane.isModified = true;
+  };
+
   /**
    * render
    */
   return (
     <Descriptions column={2} size={'middle'} layout={'horizontal'} key={'h'} style={headerStyle}>
-      <Descriptions.Item>{renderBreadcrumbItems()}</Descriptions.Item>
+      {/*<Descriptions.Item>{renderBreadcrumbItems()}</Descriptions.Item>*/}
       <Descriptions.Item contentStyle={{ display: 'flex', flexDirection: 'row-reverse' }}>
         {renderRightButtons()}
         {pushDolphinState.modalVisible && (
@@ -534,6 +609,77 @@ const HeaderContainer = (props: connect) => {
             onSubmit={(values) => handlePushDolphinSubmit(values)}
           />
         )}
+        <Modal title="发布设置" open={isModalOpen} onOk={handleOk} okText={"发布"} onCancel={handleCancel}>
+          <ProForm
+            size={'middle'}
+            initialValues={{
+              schedulingType: "0",
+            }}
+            form={form}
+            formRef={formRef}
+            submitter={false}
+            onValuesChange={debounce(onValuesChange, 500)}
+          >
+            {currentTab?.params?.taskData?.batchModel && (
+              <ProFormRadio.Group
+                label='调度类型'
+                name={'schedulingType'}
+                radioType='button'
+                rules={[{ required: true, message: l('menu.typePlaceholder') }]}
+                options={[{title:'周期调度',value:'0',label:'周期调度'},{title:'一次性调度',value:'1',label:'一次性调度'}]}
+                fieldProps={{
+                  onChange: (e: RadioChangeEvent) => {
+                    console.log('radio checked', e.target.value);
+                    setValue(e.target.value);
+                  }
+                }}
+              />
+            )}
+            {currentTab?.params?.taskData?.batchModel && value==0 && (
+              <ProFormDateRangePicker
+                label='生效日期'
+                name={'effectiveDate'}
+                rules={[{ required: true, message: l('menu.typePlaceholder') }]}
+              />
+            )}
+            {currentTab?.params?.taskData?.batchModel && value==0 && (
+              <ProFormSelect
+                label='调度周期'
+                name={'periodType'}
+                rules={[{ required: true, message: l('menu.typePlaceholder') }]}
+                options={[{title:'天',value:'1',label:'天'},{title:'周',value:'2',label:'周'},{title:'月',value:'3',label:'月'}]}
+                fieldProps={{
+                  onChange: (value: string) => {
+                    setPeriod(value)
+                  }
+                }}
+              />
+            )}
+            {currentTab?.params?.taskData?.batchModel && value==0 && (period==="2" || period==="3") && (
+              <ProFormSelect
+                label='天'
+                mode={"multiple"}
+                name={period=='2'?"days":'weeks'}
+                placeholder={"具体天数据"}
+                options={period=='2'?WEEK_CONTEXT_MENU:MONTH_CONTEXT_MENU}
+              />
+            )}
+            {currentTab?.params?.taskData?.batchModel && value==0 && (
+              <ProFormTimePicker
+                label='时间'
+                name={'periodTime'}
+                rules={[{ required: true, message: l('menu.typePlaceholder') }]}
+              />
+            )}
+            {value==1 && (
+              <ProFormDateTimePicker
+                label='指定执行时间'
+                name={'periodTime'}
+                rules={[{ required: true, message: l('menu.typePlaceholder') }]}
+              />
+            )}
+          </ProForm>
+        </Modal>
       </Descriptions.Item>
     </Descriptions>
   );

@@ -19,7 +19,10 @@
 
 package org.dinky.data.dto;
 
+import com.alibaba.fastjson2.JSONObject;
+import org.dinky.data.model.SchedulerParam;
 import org.dinky.data.model.Task;
+import org.dinky.data.model.ext.ScheduleConfig;
 import org.dinky.data.model.ext.TaskExtConfig;
 import org.dinky.data.typehandler.JSONObjectHandler;
 import org.dinky.mybatis.annotation.Save;
@@ -136,6 +139,9 @@ public class TaskSaveDTO {
             notes = "Extended configuration in JSON format for the task")
     @TableField(typeHandler = JSONObjectHandler.class, jdbcType = JdbcType.VARCHAR)
     private TaskExtConfig configJson;
+
+    @TableField(typeHandler = JSONObjectHandler.class, jdbcType = JdbcType.VARCHAR)
+    private ScheduleConfig scheduleConfig;
 
     @ApiModelProperty(value = "Note", dataType = "String", notes = "Additional notes for the task")
     private String note;

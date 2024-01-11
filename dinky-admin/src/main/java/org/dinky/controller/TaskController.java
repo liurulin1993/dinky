@@ -31,7 +31,6 @@ import org.dinky.data.enums.JobLifeCycle;
 import org.dinky.data.enums.ProcessType;
 import org.dinky.data.enums.Status;
 import org.dinky.data.exception.NotSupportExplainExcepition;
-import org.dinky.data.exception.SqlExplainExcepition;
 import org.dinky.data.model.Task;
 import org.dinky.data.result.ProTableResult;
 import org.dinky.data.result.Result;
@@ -41,6 +40,7 @@ import org.dinky.gateway.result.SavePointResult;
 import org.dinky.job.JobResult;
 import org.dinky.service.TaskService;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,13 +75,36 @@ public class TaskController {
     @ApiOperation("Submit Task")
     @Log(title = "Submit Task", businessType = BusinessType.SUBMIT)
     @ExecuteProcess(type = ProcessType.FLINK_SUBMIT)
-    public Result<JobResult> submitTask(@ProcessId @RequestParam Integer id) throws Exception {
-        JobResult jobResult =
-                taskService.submitTask(TaskSubmitDto.builder().id(id).build());
-        if (jobResult.isSuccess()) {
-            return Result.succeed(jobResult, Status.EXECUTE_SUCCESS);
-        } else {
-            return Result.failed(jobResult, jobResult.getError());
+    public Result<JobResult> submitTask(@ProcessId @RequestParam Integer id) {
+        try {
+            JobResult jobResult =
+                    taskService.submitTask(TaskSubmitDto.builder().id(id).build());
+            if (jobResult.isSuccess()) {
+                return Result.succeed(jobResult, Status.EXECUTE_SUCCESS);
+            } else {
+                return Result.failed(jobResult, jobResult.getError());
+            }
+        }catch (Exception e){
+            JobResult jobResult = new JobResult();
+            return Result.failed(jobResult,e.getMessage());
+        }
+    }
+
+    @GetMapping("/submitTaskData")
+    @ApiOperation("Submit Task by data")
+    @Log(title = "Submit Task by data", businessType = BusinessType.SUBMIT)
+    @ExecuteProcess(type = ProcessType.FLINK_SUBMIT)
+    public Result<String> submitTaskData(@ProcessId @RequestParam Integer id) {
+        try {
+            JobResult jobResult =
+                    taskService.submitTask(TaskSubmitDto.builder().id(id).build());
+            if (jobResult.isSuccess()) {
+                return Result.succeed(jobResult.getJobId(), Status.EXECUTE_SUCCESS);
+            } else {
+                return Result.failed(jobResult.getError());
+            }
+        }catch (Exception e){
+            return Result.failed(e.getMessage());
         }
     }
 
@@ -117,6 +140,17 @@ public class TaskController {
         }
     }
 
+    @GetMapping("/offlineOmJob")
+    @Log(title = "下线任务", businessType = BusinessType.TRIGGER)
+    @ApiOperation("offlineOmJob Job")
+    public Result<Void> offlineOmJob(@RequestParam Integer id) {
+        if (taskService.cancelTaskJob(taskService.getTaskInfoById(id), false) && taskService.offlineOmJob(taskService.getTaskInfoById(id),JobLifeCycle.DEVELOP)) {
+            return Result.succeed(Status.EXECUTE_SUCCESS);
+        } else {
+            return Result.failed(Status.EXECUTE_FAILED);
+        }
+    }
+
     /**
      * 重启任务
      */
@@ -145,7 +179,7 @@ public class TaskController {
     @Log(title = "changeTaskLife", businessType = BusinessType.TRIGGER)
     @ApiOperation("changeTaskLife")
     public Result<Boolean> changeTaskLife(@RequestParam Integer taskId, @RequestParam Integer lifeCycle)
-            throws SqlExplainExcepition {
+            throws Exception {
         if (taskService.changeTaskLifeRecyle(taskId, JobLifeCycle.get(lifeCycle))) {
             return Result.succeed(lifeCycle == 2 ? Status.PUBLISH_SUCCESS : Status.OFFLINE_SUCCESS);
         } else {

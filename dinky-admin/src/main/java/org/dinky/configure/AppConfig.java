@@ -32,7 +32,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
-import cn.dev33.satoken.exception.StopMatchException;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.stp.StpUtil;
 
@@ -73,16 +72,11 @@ public class AppConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
         // 注册Sa-Token的路由拦截器
-        registry.addInterceptor(new SaInterceptor(handler -> {
-                    boolean login = StpUtil.isLogin();
-                    if (!login) {
-                        throw new StopMatchException();
-                    }
-                }))
-                .addPathPatterns("/api/**")
-                .excludePathPatterns(
-                        "/api/login", "/api/ldap/ldapEnableStatus",
-                        "/druid/**", "/openapi/**");
+//        registry.addInterceptor(new SaInterceptor(handler -> StpUtil.checkLogin()))
+//                .addPathPatterns("/api/**")
+//                .excludePathPatterns(
+//                        "/api/login", "/api/ldap/ldapEnableStatus",
+//                        "/druid/**", "/openapi/**");
 
         registry.addInterceptor(new TenantInterceptor())
                 .addPathPatterns("/api/**")

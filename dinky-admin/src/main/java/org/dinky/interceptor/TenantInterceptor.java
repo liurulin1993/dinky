@@ -50,6 +50,7 @@ public class TenantInterceptor implements AsyncHandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler)
             throws Exception {
+        TenantContextHolder.set(10000);
         boolean isPass = false;
         Cookie[] cookies = request.getCookies();
         Opt<String> token = Opt.empty();
@@ -63,22 +64,7 @@ public class TenantInterceptor implements AsyncHandlerInterceptor {
                         }
                         break;
                     case "tenantId":
-                        UserDTO userInfo = UserInfoContextHolder.get(StpUtil.getLoginIdAsInt());
-                        if (Asserts.isNull(userInfo)) {
-                            StpUtil.logout(StpUtil.getLoginIdAsInt());
-                            return false;
-                        }
-
-                        int finalTenantId = Integer.parseInt(cookie.getValue());
-                        List<Tenant> tenants =
-                                Opt.ofNullable(userInfo.getTenantList()).orElse(new ArrayList<>()).stream()
-                                        .filter(t -> t.getId() == finalTenantId)
-                                        .collect(Collectors.toList());
-                        if (CollectionUtils.isEmpty(tenants)) {
-                            StpUtil.logout(StpUtil.getLoginIdAsInt());
-                            return false;
-                        }
-
+                        int finalTenantId = 10000;
                         TenantContextHolder.set(finalTenantId);
                         break;
                 }

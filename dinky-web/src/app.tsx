@@ -37,6 +37,8 @@ import { FullScreenProvider } from './hooks/useEditor';
 import { errorConfig } from './requestErrorConfig';
 import { getDataByParamsReturnResult } from './services/BusinessCrud';
 import { API } from './services/data';
+import {THEME} from "@/types/Public/data";
+import { SelectLang, useModel } from '@umijs/max';
 
 // const isDev = process.env.NODE_ENV === "development";
 const loginPath = API_CONSTANTS.LOGIN_PATH;
@@ -60,18 +62,20 @@ export function patchRoutes({ routes }: any) {
 }
 
 const queryUserInfo = async () => {
-  return getDataByParamsReturnResult(API_CONSTANTS.CURRENT_USER).then((result) => {
-    const { user, roleList, tenantList, currentTenant, menuList, saTokenInfo } = result.data;
+  const token = window.location.hash.split("?")[1].split("=")[1];
+  return getDataByParamsReturnResult(API_CONSTANTS.CURRENT_USER,{},{'Uniplore-Auth':token}).then((result) => {
+    const { nickName, avatar, realName } = result.data;
     const currentUser: API.CurrentUser = {
       user: {
-        ...user,
-        avatar: user.avatar ?? '/icons/user_avatar.png'
+        username:realName,
+        nickname:nickName,
+        avatar: avatar == '' ?? '/icons/user_avatar.png'
       },
-      roleList: roleList,
-      tenantList: tenantList,
-      currentTenant: currentTenant,
-      menuList: menuList,
-      tokenInfo: saTokenInfo
+      // roleList: roleList,
+      // tenantList: tenantList,
+      // currentTenant: currentTenant,
+      // menuList: menuList,
+      // tokenInfo: saTokenInfo
     };
     return currentUser;
   });
@@ -99,9 +103,6 @@ export async function getInitialState(): Promise<{
   const { location } = history;
   if (location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
-    if (currentUser?.menuList) {
-      extraRoutes = currentUser?.menuList;
-    }
 
     return {
       fetchUserInfo,
