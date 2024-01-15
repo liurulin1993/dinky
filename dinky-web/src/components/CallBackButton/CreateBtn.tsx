@@ -31,7 +31,6 @@ export const CreateBtn: React.FC<CreateButtonProps> = (props) => {
 
   return (
     <Button type='primary' onClick={onClick}>
-      <PlusOutlined />
       {l('button.create')}
     </Button>
   );

@@ -102,7 +102,7 @@ public class AlertInstanceController {
      */
     @GetMapping("/list")
     @ApiOperation("Query AlertInstance List")
-    public Result<List<AlertInstance>> listAlertInstances(@RequestParam(value = "keyword") String keyword) {
+    public Result<List<AlertInstance>> listAlertInstances(@RequestParam(defaultValue = "", value = "keyword") String keyword) {
         return Result.succeed(alertInstanceService.selectListByKeyWord(keyword));
     }
 

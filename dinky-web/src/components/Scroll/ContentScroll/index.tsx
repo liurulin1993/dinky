@@ -29,12 +29,10 @@ const { useToken } = theme;
 const ContentScroll: React.FC<ContentScrollProps> = (props) => {
   const { height, children } = props;
   const { token } = useToken();
-
   return (
     <div
       className='content-scroll'
       style={{
-        height: height,
         display: height < 1 ? 'none' : 'block',
         backgroundColor: token.colorBgBase
       }}

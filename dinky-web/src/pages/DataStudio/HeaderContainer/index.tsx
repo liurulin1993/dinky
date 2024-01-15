@@ -19,13 +19,13 @@
 
 import { LoadingBtn } from '@/components/CallBackButton/LoadingBtn';
 import { PushpinIcon } from '@/components/Icons/CustomIcons';
-import { FlexCenterDiv } from '@/components/StyledComponents';
+// import { FlexCenterDiv } from '@/components/StyledComponents';
 import {getCurrentData, getCurrentTab, isDataStudioTabsItemType, mapDispatchToProps} from '@/pages/DataStudio/function';
 import { LeftBottomKey } from '@/pages/DataStudio/data.d';
 import Explain from '@/pages/DataStudio/HeaderContainer/Explain';
 import FlinkGraph from '@/pages/DataStudio/HeaderContainer/FlinkGraph';
 import {
-  buildBreadcrumbItems,
+  // buildBreadcrumbItems,
   isCanPushDolphin,
   isOnline,
   isSql,
@@ -75,7 +75,7 @@ import {
   ProFormSelect,
   ProFormTimePicker
 } from '@ant-design/pro-components';
-import { Breadcrumb, Descriptions, Modal, Space, RadioChangeEvent } from 'antd';
+import { Descriptions, Modal, Space, RadioChangeEvent } from 'antd';
 import React, { memo, useEffect, useState ,useRef} from 'react';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import {useForm} from "antd/es/form/Form";
@@ -95,8 +95,6 @@ const headerStyle: React.CSSProperties = {
 
 const HeaderContainer = (props: connect) => {
   const {
-    size,
-    activeBreadcrumbTitle,
     tabs: { panes, activeKey },
     saveTabs,
     updateJobRunningMsg,
@@ -125,11 +123,11 @@ const HeaderContainer = (props: connect) => {
   });
 
   const currentData = getCurrentData(panes, activeKey);
-
+  const [form] = useForm();
   useEffect(() => {
     queryDsConfig(SettingConfigKeyEnum.DOLPHIN_SCHEDULER.toLowerCase());
     form.setFieldsValue({ ...currentData?.scheduleConfig });
-  }, [currentData]);
+  }, [currentData,form]);
 
   const currentTab = getCurrentTab(panes, activeKey) as DataStudioTabsItemType;
 
@@ -383,7 +381,6 @@ const HeaderContainer = (props: connect) => {
           currentTab?.subType?.toLowerCase() === DIALECT.FLINK_SQL) ||
           currentTab?.subType?.toLowerCase() === DIALECT.FLINKJAR) &&
           currentTab?.params?.taskData?.type !== "local",
-      // click: () => handleChangeJobLife()
       click: () => currentTab?.params?.taskData?.batchModel && !isOnline(currentData) ?showModal():handleChangeJobLife()
     },
     {
@@ -452,7 +449,7 @@ const HeaderContainer = (props: connect) => {
       icon: <PauseOutlined />,
       title: l('pages.datastudio.editor.stop'),
       click: handlerStop,
-      isShow: currentTab?.type == TabsPageType.project && !isStatusDone(currentData?.status),
+      isShow: currentTab?.type == TabsPageType.project && !isStatusDone(currentData?.status) && currentTab?.params?.taskData?.type === "local",
       hotKey: (e: KeyboardEvent) => e.shiftKey && e.key === 'F10',
       hotKeyDesc: 'Shift+F10',
       props: {
@@ -538,7 +535,7 @@ const HeaderContainer = (props: connect) => {
   // 天
   const [period, setPeriod] = useState('')
 
-  const [form] = useForm();
+
 
   const formRef = useRef<ProFormInstance>();
 

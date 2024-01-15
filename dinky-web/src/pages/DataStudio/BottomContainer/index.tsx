@@ -269,7 +269,7 @@ const BottomContainer: React.FC<BottomContainerProps> = (props: any) => {
       return {
         ...item,
         children: (
-          <ContentScroll height={props.height - VIEW.leftMargin}>{item.children}</ContentScroll>
+          <ContentScroll height={props.height - VIEW.leftMargin + 54}>{item.children}</ContentScroll>
         )
       };
     });

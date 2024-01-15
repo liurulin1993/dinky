@@ -48,22 +48,24 @@ const JobMetricsList = (props: MetricsProps) => {
   const { data, refresh } = useHookRequest<any, any>(getMetricsLayout, { defaultParams: [] });
 
   const dataProcess = (sourceData: Record<string, ChartData[]>, datas: MetricsDataType[]) => {
-    datas.forEach((item) => {
-      const verticesMap = item.content as Record<string, Record<string, string>>;
-      const flinkJobId = item.model;
-      Object.keys(verticesMap).forEach((verticeId) =>
-        Object.keys(verticesMap[verticeId]).forEach((mertics) => {
-          const key = `${flinkJobId}-${verticeId}-${mertics}`;
-          if (!(key in sourceData)) {
-            sourceData[key] = [];
-          }
-          sourceData[key].push({
-            time: item.heartTime,
-            value: verticesMap[verticeId][mertics]
-          });
-        })
-      );
-    });
+    if(datas != undefined){
+      datas.forEach((item) => {
+        const verticesMap = item.content as Record<string, Record<string, string>>;
+        const flinkJobId = item.model;
+        Object.keys(verticesMap).forEach((verticeId) =>
+            Object.keys(verticesMap[verticeId]).forEach((mertics) => {
+              const key = `${flinkJobId}-${verticeId}-${mertics}`;
+              if (!(key in sourceData)) {
+                sourceData[key] = [];
+              }
+              sourceData[key].push({
+                time: item.heartTime,
+                value: verticesMap[verticeId][mertics]
+              });
+            })
+        );
+      });
+    }
     return sourceData;
   };
 

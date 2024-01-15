@@ -252,8 +252,8 @@ const DataStudio: React.FC<connect> = (props: any) => {
           <Layout
             hasSider
             style={{
-              minHeight: size.contentHeight,
-              maxHeight: size.contentHeight,
+              minHeight: size.contentHeight + 50,
+              maxHeight: size.contentHeight + 50,
               paddingInline: 0
             }}
           >

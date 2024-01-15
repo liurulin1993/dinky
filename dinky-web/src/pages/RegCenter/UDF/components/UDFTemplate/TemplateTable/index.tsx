@@ -217,6 +217,7 @@ const TemplateTable: React.FC = () => {
       <ProTable<UDFTemplate>
         {...PROTABLE_OPTIONS_PUBLIC}
         loading={templateState.loading}
+        style={{padding:16,background:'#F0F2F5'}}
         actionRef={actionRef}
         headerTitle={l('rc.udf.template.management')}
         toolBarRender={() => [

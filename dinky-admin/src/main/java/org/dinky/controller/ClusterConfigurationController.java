@@ -99,7 +99,7 @@ public class ClusterConfigurationController {
      */
     @GetMapping("/list")
     @ApiOperation("Cluster Config List")
-    public Result<List<ClusterConfigurationDTO>> listClusterConfigList(@RequestParam String keyword) {
+    public Result<List<ClusterConfigurationDTO>> listClusterConfigList(@RequestParam(defaultValue = "") String keyword) {
         return Result.succeed(clusterConfigurationService.selectListByKeyWord(keyword));
     }
 

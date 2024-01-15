@@ -136,7 +136,7 @@ const StudioEditor: React.FC<EditorProps & connect> = (props) => {
 
   return (
     <Spin spinning={loading} delay={600}>
-      <div style={{ width: '100%', height: fullscreen ? 'calc(100vh - 50px)' : height }}>
+      <div style={{ width: '100%', height: fullscreen ? 'calc(100vh - 50px)' : height + 54 }}>
         <DiffModal
           diffs={diff}
           open={isModalOpen}

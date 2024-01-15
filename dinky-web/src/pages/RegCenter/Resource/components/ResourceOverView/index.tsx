@@ -235,7 +235,7 @@ const ResourceOverView: React.FC = () => {
    */
   return (
     <>
-      <ProCard ghost size={'small'} bodyStyle={{ height: 1000 - 80 }}>
+      <ProCard ghost size={'small'} bodyStyle={{ height: innerHeight - 25 }}>
         <SplitPane
           split={'vertical'}
           defaultSizes={[150, 500]}

@@ -19,10 +19,8 @@
 
 import FadeIn from '@/components/Animation/FadeIn';
 import {
-  DinkyIcon,
   DSIcon,
   FlinkIcon,
-  LDAPIcon,
   MavenIcon,
   MetricsIcon,
   ResourceIcon
@@ -32,7 +30,7 @@ import { SettingConfigKeyEnum } from '@/pages/SettingCenter/GlobalSetting/Settin
 import { DSConfig } from '@/pages/SettingCenter/GlobalSetting/SettingOverView/DSConfig';
 import { EnvConfig } from '@/pages/SettingCenter/GlobalSetting/SettingOverView/EnvConfig';
 import { FlinkConfig } from '@/pages/SettingCenter/GlobalSetting/SettingOverView/FlinkConfig';
-import { LdapConfig } from '@/pages/SettingCenter/GlobalSetting/SettingOverView/LdapConfig';
+// import { LdapConfig } from '@/pages/SettingCenter/GlobalSetting/SettingOverView/LdapConfig';
 import { MavenConfig } from '@/pages/SettingCenter/GlobalSetting/SettingOverView/MavenConfig';
 import { MetricsConfig } from '@/pages/SettingCenter/GlobalSetting/SettingOverView/MetricsConfig';
 import { ResourcesConfig } from '@/pages/SettingCenter/GlobalSetting/SettingOverView/ResourcesConfig';
@@ -43,6 +41,9 @@ import { BaseConfigProperties, Settings } from '@/types/SettingCenter/data';
 import { l } from '@/utils/intl';
 import { ProCard } from '@ant-design/pro-components';
 import { memo, useEffect, useState } from 'react';
+import {
+  SettingOutlined
+} from '@ant-design/icons';
 
 const imgSize = 25;
 
@@ -98,7 +99,7 @@ const SettingOverView = () => {
       flink: flinkConfig,
       maven: mavenConfig,
       dolphinscheduler: dsConfig,
-      ldap: ldapConfig,
+      // ldap: ldapConfig,
       metrics: metricsConfig,
       resource: resourceConfig
     } = data;
@@ -108,7 +109,7 @@ const SettingOverView = () => {
         key: SettingConfigKeyEnum.DINKY,
         label: (
           <TagAlignCenter>
-            <DinkyIcon size={imgSize - 5} />
+            <SettingOutlined />
             {l('sys.setting.dinky')}
           </TagAlignCenter>
         ),
@@ -148,17 +149,17 @@ const SettingOverView = () => {
         children: <DSConfig onSave={handleSaveSubmit} data={dsConfig} />,
         path: '/settings/globalsetting/ds'
       },
-      {
-        key: SettingConfigKeyEnum.LDAP,
-        label: (
-          <TagAlignCenter>
-            <LDAPIcon size={imgSize} />
-            {l('sys.setting.ldap')}
-          </TagAlignCenter>
-        ),
-        children: <LdapConfig onSave={handleSaveSubmit} data={ldapConfig} />,
-        path: '/settings/globalsetting/ldap'
-      },
+      // {
+      //   key: SettingConfigKeyEnum.LDAP,
+      //   label: (
+      //     <TagAlignCenter>
+      //       <LDAPIcon size={imgSize} />
+      //       {l('sys.setting.ldap')}
+      //     </TagAlignCenter>
+      //   ),
+      //   children: <LdapConfig onSave={handleSaveSubmit} data={ldapConfig} />,
+      //   path: '/settings/globalsetting/ldap'
+      // },
       {
         key: SettingConfigKeyEnum.METRIC,
         label: (

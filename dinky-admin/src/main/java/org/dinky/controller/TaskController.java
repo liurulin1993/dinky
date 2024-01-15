@@ -144,7 +144,7 @@ public class TaskController {
     @Log(title = "下线任务", businessType = BusinessType.TRIGGER)
     @ApiOperation("offlineOmJob Job")
     public Result<Void> offlineOmJob(@RequestParam Integer id) {
-        if (taskService.cancelTaskJob(taskService.getTaskInfoById(id), false) && taskService.offlineOmJob(taskService.getTaskInfoById(id),JobLifeCycle.DEVELOP)) {
+        if (taskService.cancelTaskJob(taskService.getTaskInfoById(id), false,true) && taskService.offlineOmJob(taskService.getTaskInfoById(id),JobLifeCycle.DEVELOP)) {
             return Result.succeed(Status.EXECUTE_SUCCESS);
         } else {
             return Result.failed(Status.EXECUTE_FAILED);

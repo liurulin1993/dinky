@@ -31,11 +31,11 @@ import { createContext, useContext, useReducer } from 'react';
 
 export const BtnRoute: { [c: string]: CircleDataStudioButtonProps[] } = {
   'menu.datastudio.datasource': [
-    {
-      icon: <PlusOutlined />,
-      title: l('button.create'),
-      onClick: () => {}
-    },
+    // {
+    //   icon: <PlusOutlined />,
+    //   title: l('button.create'),
+    //   onClick: () => {}
+    // },
     {
       icon: <ReloadOutlined />,
       title: l('button.refresh'),

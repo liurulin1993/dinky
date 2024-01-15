@@ -27,7 +27,7 @@ import { PageContainer } from '@ant-design/pro-components';
 export default () => {
   return (
     <SlowlyAppear>
-      <PageContainer title={false}>
+      <PageContainer title={false} breadcrumb={{ style: { display: 'none' } }}>
         <DataSourceTable />
       </PageContainer>
     </SlowlyAppear>

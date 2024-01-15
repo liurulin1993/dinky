@@ -71,6 +71,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.dinky</groupId>
+            <artifactId>dinky-metadata-postgresql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
         </dependency>

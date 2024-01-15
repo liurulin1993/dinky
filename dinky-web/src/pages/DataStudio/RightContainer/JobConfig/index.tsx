@@ -24,7 +24,13 @@ import {
   getCurrentTab,
   isDataStudioTabsItemType
 } from '@/pages/DataStudio/function';
-import { SessionType, StateType, STUDIO_MODEL, STUDIO_MODEL_ASYNC } from '@/pages/DataStudio/model';
+import {
+  DataStudioTabsItemType,
+  SessionType,
+  StateType,
+  STUDIO_MODEL,
+  STUDIO_MODEL_ASYNC
+} from '@/pages/DataStudio/model';
 import {
   buildAlertGroupOptions,
   buildClusterConfigOptions,
@@ -53,6 +59,7 @@ import { useForm } from 'antd/es/form/Form';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { connect } from 'umi';
+import {isOnline} from "@/pages/DataStudio/HeaderContainer/function";
 
 const { Text } = Typography;
 
@@ -91,7 +98,7 @@ const JobConfig = (props: any) => {
 
     form.setFieldsValue({ ...current, type: current?.type ?? RUN_MODE.LOCAL });
   }, [current]);
-
+  const currentData = getCurrentData(panes, activeKey);
   const onValuesChange = (change: { [key in string]: any }, all: any) => {
     const pane = getCurrentTab(panes, activeKey);
     if (!isDataStudioTabsItemType(pane)) {
@@ -147,6 +154,7 @@ const JobConfig = (props: any) => {
       tooltip={l('pages.datastudio.label.jobConfig.clusterConfig.tip1', '', {
         type: current?.type
       })}
+      disabled={isOnline(currentData)}
       rules={[
         {
           required: true,
@@ -187,6 +195,7 @@ const JobConfig = (props: any) => {
           tooltip={l('pages.datastudio.label.jobConfig.execmode.tip')}
           rules={[{ required: true, message: l('pages.datastudio.label.jobConfig.execmode.tip') }]}
           options={buildRunModelOptions()}
+          disabled={isOnline(currentData)}
           fieldProps={{
             onChange: (value: string) => {
               setSelectRunMode(value);

@@ -96,7 +96,7 @@ public class LogAspect {
             }
 
             // 获取当前的用户
-            User user = UserInfoContextHolder.get(StpUtil.getLoginIdAsInt()).getUser();
+            //User user = UserInfoContextHolder.get(StpUtil.getLoginIdAsInt()).getUser();
 
             // *========数据库日志=========*//
             OperateLog operLog = new OperateLog();
@@ -110,10 +110,10 @@ public class LogAspect {
             operLog.setJsonResult(JSONUtil.toJsonStr(jsonResult));
 
             operLog.setOperateUrl(ServletUtils.getRequest().getRequestURI());
-            if (user != null) {
-                operLog.setOperateName(user.getUsername());
-                operLog.setOperateUserId(user.getId());
-            }
+//            if (user != null) {
+//                operLog.setOperateName(user.getUsername());
+//                operLog.setOperateUserId(user.getId());
+//            }
 
             if (e != null) {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());

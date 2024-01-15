@@ -127,7 +127,7 @@ public class DataBaseController {
      */
     @GetMapping("/list")
     @ApiOperation("DataBase Get All")
-    public Result<List<DataBase>> listDataBases(@RequestParam(value = "keyword") String keyword) {
+    public Result<List<DataBase>> listDataBases(@RequestParam(defaultValue = "", value = "keyword") String keyword) {
         List<DataBase> dataBases = new ArrayList<>();
         cn.uniplore.core.common.web.Result<List<FeignDatasourceByDinkyVO>> datasourceAll = feignDatasourceProvider.getDatasourceAllByDinky(null, keyword, null, keyword);
         if(datasourceAll.getCode() == 200){

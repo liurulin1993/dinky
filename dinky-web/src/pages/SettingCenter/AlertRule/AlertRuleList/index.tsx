@@ -156,6 +156,7 @@ const AlertRuleList: React.FC = () => {
       <ProTable<AlertRule>
         actionRef={actionRef}
         headerTitle={false}
+        style={{padding:16,background:'#F0F2F5'}}
         loading={ruleState.loading}
         {...PROTABLE_OPTIONS_PUBLIC}
         toolBarRender={() => [

@@ -211,6 +211,7 @@ const UDFRegister: React.FC<UDFRegisterProps> = (props) => {
       <ProTable<UDFRegisterInfoParent>
         dataSource={parentData}
         columns={columnsParent}
+        style={{padding:16,background:'#F0F2F5'}}
         rowKey='resourcesId'
         size={'small'}
         pagination={{

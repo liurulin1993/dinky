@@ -21,7 +21,7 @@ export default {
   'button.add': '添加',
   'button.check': '检查',
   'button.graph': 'DAG',
-  'button.create': '新建',
+  'button.create': '新增',
   'button.recovery': '恢复',
   'button.close': '关闭',
   'button.daemon': '后台运行',

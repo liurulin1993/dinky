@@ -764,6 +764,7 @@ export default {
     'Specify the hdfs path of lib (without / at the end), which needs to include the dependencies of Flink runtime',
   'rc.cc.libPathPlaceholder': 'Please enter the hdfs path of lib! Values such as hdfs',
   'rc.cc.management': 'Cluster Config Management',
+  'rc.cc.instance': 'Cluster Instance Management',
   'rc.cc.modify': 'Modify Cluster Config',
   'rc.cc.name': 'Cluster Config Name',
   'rc.cc.search': 'Search Name',
@@ -1069,7 +1070,7 @@ export default {
   'sys.process.type': 'Type',
   'sys.process.viewErrorLog': 'View Error Level Log',
   'sys.process.viewInfoLog': 'View Info Level Log',
-  'sys.setting.dinky': 'Dinky Env Configuration',
+  'sys.setting.dinky': 'Env Configuration',
   'sys.setting.dinky.tooltip':
     'Mainly modify system variables to ensure stable operation of basic functions',
   'sys.setting.ds': 'DolphinScheduler Configuration',

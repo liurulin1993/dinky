@@ -92,10 +92,10 @@ const DataSource = (props: any) => {
 
   const btnEvent = [...BtnRoute[currentTabName]];
 
+  // btnEvent[0].onClick = () => {
+  //   setShowCreate(true);
+  // };
   btnEvent[0].onClick = () => {
-    setShowCreate(true);
-  };
-  btnEvent[1].onClick = () => {
     if (!selectDatabaseId) return;
     setIsLoadingDatabase(true);
     clearDataSourceTable(selectDb.dsDatasourceId).then(() => {

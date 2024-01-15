@@ -90,7 +90,7 @@ public class AlertGroupController {
      */
     @GetMapping("/list")
     @ApiOperation("Query AlertGroup List")
-    public Result<List<AlertGroup>> listAlertGroups(@RequestParam String keyword) {
+    public Result<List<AlertGroup>> listAlertGroups(@RequestParam(defaultValue = "") String keyword) {
         return Result.succeed(alertGroupService.selectListByKeyWord(keyword));
     }
 

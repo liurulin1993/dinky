@@ -690,7 +690,13 @@
 
         </dependencies>
     </dependencyManagement>
-
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <name>maven2 repository-releases</name>
+            <url>http://192.168.2.104:8081/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
     <build>
         <pluginManagement>
             <plugins>

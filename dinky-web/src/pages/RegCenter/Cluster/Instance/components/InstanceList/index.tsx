@@ -260,11 +260,19 @@ export default () => {
    * tool bar render
    */
   const toolBarRender = () => [
-    <Switch
-      checkedChildren={l('rc.ci.ar')}
-      unCheckedChildren={l('rc.ci.mr')}
-      onChange={(v) => setIsAutoCreate(v)}
-    />,
+      <Input.Search
+          loading={clusterInstanceStatus.loading}
+          key={`_search`}
+          allowClear
+          placeholder={l('rc.ci.search')}
+          onSearch={(v) => setSearchKeyword(v)}
+        />,
+      <Switch
+        checkedChildren={l('rc.ci.ar')}
+        unCheckedChildren={l('rc.ci.mr')}
+        onChange={(v) => setIsAutoCreate(v)}
+        style={{minWidth:100}}
+      />,
       <CreateBtn
         key={`_add`}
         onClick={() => setClusterInstanceStatus((prevState) => ({ ...prevState, addedOpen: true }))}
@@ -272,7 +280,7 @@ export default () => {
       <Button
         key={`_add_heartbeat_btn`}
         type={'primary'}
-        icon={<HeartTwoTone />}
+        // icon={<HeartTwoTone />}
         onClick={() => handleHeartBeat()}
       >
         {l('button.heartbeat')}
@@ -314,14 +322,14 @@ export default () => {
   return (
     <>
       <ProList<Cluster.Instance>
-        headerTitle={
-          <Input.Search
-            loading={clusterInstanceStatus.loading}
-            key={`_search`}
-            allowClear
-            placeholder={l('rc.ci.search')}
-            onSearch={(v) => setSearchKeyword(v)}
-          />
+        headerTitle={l('rc.cc.instance')
+          // <Input.Search
+          //   loading={clusterInstanceStatus.loading}
+          //   key={`_search`}
+          //   allowClear
+          //   placeholder={l('rc.ci.search')}
+          //   onSearch={(v) => setSearchKeyword(v)}
+          // />
         }
         toolBarRender={toolBarRender}
         {...PROTABLE_OPTIONS_PUBLIC}

@@ -193,8 +193,9 @@ const GlobalVarProTable = () => {
   return (
     <>
       {/*table*/}
-      <ProTable<GlobalVar>
-        headerTitle={l('rc.gv.Management')}
+      <ProTable <GlobalVar>
+          style={{padding:16,background:'#F0F2F5'}}
+        // headerTitle={l('rc.gv.Management')}
         actionRef={actionRef}
         loading={globalVarState.loading}
         {...PROTABLE_OPTIONS_PUBLIC}

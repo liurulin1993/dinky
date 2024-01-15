@@ -68,7 +68,7 @@ public class AlertHistoryController {
             required = true,
             dataType = "Integer")
     @Log(title = "Query Alert History", businessType = BusinessType.QUERY)
-    public Result<List<AlertHistory>> listAlertHistoryRecord(@RequestParam("jobInstanceId") Integer jobInstanceId) {
+    public Result<List<AlertHistory>> listAlertHistoryRecord(@RequestParam(defaultValue = "", value = "jobInstanceId") Integer jobInstanceId) {
         return Result.succeed(alertHistoryService.queryAlertHistoryRecordByJobInstanceId(jobInstanceId));
     }
 
