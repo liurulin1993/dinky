@@ -38,6 +38,7 @@
             <outputDirectory>config</outputDirectory>
             <includes>
                 <include>**/*.yml</include>
+                <include>**/*.sql</include>
                 <include>**/*.yaml</include>
                 <include>**/log4j2.xml</include>
                 <include>**/DinkyFlinkDockerfile</include>

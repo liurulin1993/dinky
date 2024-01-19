@@ -599,7 +599,7 @@ public class TaskServiceImpl extends SuperServiceImpl<TaskMapper, Task> implemen
                     }else{
                         versionId = 1;
                     }
-                    omJobUpdateDTO.setVersion(versionId.floatValue());
+                    omJobUpdateDTO.setVersion(versionId);
                     feignOmJobProvider.updateOmJob(task.getDataJobId(),omJobUpdateDTO);
                 }
                 //上线离线任务
@@ -659,7 +659,7 @@ public class TaskServiceImpl extends SuperServiceImpl<TaskMapper, Task> implemen
         feignOmJobAddDTO.setJobStatus(josStatus);
         feignOmJobAddDTO.setJobConfig(jobConfig);
         feignOmJobAddDTO.setDescription(task.getNote());
-        feignOmJobAddDTO.setVersion(1f);
+        feignOmJobAddDTO.setVersion(1);
         cn.uniplore.core.common.web.Result<FeignOmJobResultVO> feignOmJobResultVOResult = feignOmJobProvider.addOmJob(feignOmJobAddDTO);
         return feignOmJobResultVOResult.getData().getJobId();
     }

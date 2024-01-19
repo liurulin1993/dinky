@@ -17,11 +17,19 @@ spring:
     # note: the h2 database is only for experience use, and the related data that has been created cannot be migrated, please use it with caution
     active: mysql
     include: jmx
+  sql:
+    init:
+      encoding: utf-8
+      mode: always
+      platform: mysql
+      username: root
+      password: 123456
+      data-locations: classpath:init-sql/dinky.sql
 
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: 192.168.2.35:8848
   # mvc config
   mvc:
     pathmatch:
