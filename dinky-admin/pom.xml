@@ -21,8 +21,7 @@
     <parent>
         <groupId>org.dinky</groupId>
         <artifactId>dinky</artifactId>
-        <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>1.0.0-rc3</version>
     </parent>
     <artifactId>dinky-admin</artifactId>
 
@@ -71,6 +70,10 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.dinky</groupId>
             <artifactId>dinky-metadata-postgresql</artifactId>
             <version>${project.version}</version>
@@ -101,21 +104,45 @@
         <dependency>
             <groupId>cn.uniplore</groupId>
             <artifactId>uniplore-service-operation-monitor</artifactId>
-            <version>0.1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.uniplore</groupId>
-            <artifactId>uniplore-starter-feign</artifactId>
-            <version>0.1.4</version>
+            <version>0.1.4-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>springfox-spring-webflux</artifactId>
+                    <groupId>io.springfox</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>springfox-boot-starter</artifactId>
+                    <groupId>io.springfox</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>springfox-data-rest</artifactId>
+                    <groupId>io.springfox</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>springfox-oas</artifactId>
+                    <groupId>io.springfox</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>knife4j-spring</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>knife4j-spring-boot-autoconfigure</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>knife4j-spring-boot-starter</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>knife4j-spring-ui</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>cn.uniplore</groupId>
             <artifactId>uniplore-starter-common</artifactId>
-            <version>0.1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.uniplore</groupId>
-            <artifactId>uniplore-service-data-datasource</artifactId>
             <version>0.1.4</version>
             <exclusions>
                 <exclusion>
@@ -133,6 +160,61 @@
                 <exclusion>
                     <artifactId>springfox-oas</artifactId>
                     <groupId>io.springfox</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>knife4j-spring</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>knife4j-spring-boot-autoconfigure</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>knife4j-spring-boot-starter</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>knife4j-spring-ui</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>cn.uniplore</groupId>
+            <artifactId>uniplore-service-data-datasource</artifactId>
+            <version>0.1.4-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>springfox-spring-webflux</artifactId>
+                    <groupId>io.springfox</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>springfox-boot-starter</artifactId>
+                    <groupId>io.springfox</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>springfox-data-rest</artifactId>
+                    <groupId>io.springfox</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>springfox-oas</artifactId>
+                    <groupId>io.springfox</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>knife4j-spring</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>knife4j-spring-boot-autoconfigure</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>knife4j-spring-boot-starter</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>knife4j-spring-ui</artifactId>
+                    <groupId>com.github.xiaoymin</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -180,7 +262,6 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <scope>${scope.runtime}</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
