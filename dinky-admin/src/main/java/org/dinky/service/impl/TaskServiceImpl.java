@@ -605,9 +605,7 @@ public class TaskServiceImpl extends SuperServiceImpl<TaskMapper, Task> implemen
                 //上线离线任务
                 feignOmJobProvider.onlineBatchJob(task.getDataJobId());
             }else {
-                //新增任务
-                Long dataJobId = addOmJob(task, josStatus, jobConfig, null);
-                task.setDataJobId(dataJobId);
+
                 //上线实时任务
                 //执行任务
                 JobResult jobResult = submitTask(TaskSubmitDto.builder().id(taskId).build());
@@ -616,6 +614,9 @@ public class TaskServiceImpl extends SuperServiceImpl<TaskMapper, Task> implemen
                 // 注解自调用会失效，这里通过获取对象方法绕过此限制
                 taskServiceBean = applicationContext.getBean(TaskServiceImpl.class);
                 taskServiceBean.saveOrUpdateTask(task.buildTask());
+                //新增任务
+                Long dataJobId = addOmJob(task, josStatus, jobConfig, null);
+                task.setDataJobId(dataJobId);
                 //将flinkid返回数据中台并且上线
                 FeignOmOnlineStreamJobAddDTO data = new FeignOmOnlineStreamJobAddDTO();
                 data.setDataJobId(dataJobId);

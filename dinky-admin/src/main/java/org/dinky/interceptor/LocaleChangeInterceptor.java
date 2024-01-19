@@ -39,18 +39,19 @@ public class LocaleChangeInterceptor implements AsyncHandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        Cookie cookie = WebUtils.getCookie(request, BaseConstant.LOCALE_LANGUAGE_COOKIE);
-        if (Asserts.isNotNull(cookie)) {
-            // Proceed in cookie
-            LocaleContextHolder.setLocale(parseLocaleValue(cookie.getValue()));
-            I18n.setLocale(LocaleContextHolder.getLocale());
-        }
-        // Proceed in header
-        String newLocale = request.getHeader(BaseConstant.LOCALE_LANGUAGE_COOKIE);
-        if (Asserts.isNotNull(newLocale)) {
-            LocaleContextHolder.setLocale(parseLocaleValue(newLocale));
-            I18n.setLocale(LocaleContextHolder.getLocale());
-        }
+        I18n.setLocale(LocaleContextHolder.getLocale());
+//        Cookie cookie = WebUtils.getCookie(request, BaseConstant.LOCALE_LANGUAGE_COOKIE);
+//        if (Asserts.isNotNull(cookie)) {
+//            // Proceed in cookie
+//            LocaleContextHolder.setLocale(parseLocaleValue(cookie.getValue()));
+//            I18n.setLocale(LocaleContextHolder.getLocale());
+//        }
+//        // Proceed in header
+//        String newLocale = request.getHeader(BaseConstant.LOCALE_LANGUAGE_COOKIE);
+//        if (Asserts.isNotNull(newLocale)) {
+//            LocaleContextHolder.setLocale(parseLocaleValue(newLocale));
+//            I18n.setLocale(LocaleContextHolder.getLocale());
+//        }
         return true;
     }
 

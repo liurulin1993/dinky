@@ -178,13 +178,17 @@ public class TaskController {
     @GetMapping("/changeTaskLife")
     @Log(title = "changeTaskLife", businessType = BusinessType.TRIGGER)
     @ApiOperation("changeTaskLife")
-    public Result<Boolean> changeTaskLife(@RequestParam Integer taskId, @RequestParam Integer lifeCycle)
-            throws Exception {
-        if (taskService.changeTaskLifeRecyle(taskId, JobLifeCycle.get(lifeCycle))) {
-            return Result.succeed(lifeCycle == 2 ? Status.PUBLISH_SUCCESS : Status.OFFLINE_SUCCESS);
-        } else {
-            return Result.failed(lifeCycle == 2 ? Status.PUBLISH_FAILED : Status.OFFLINE_FAILED);
+    public Result<Boolean> changeTaskLife(@RequestParam Integer taskId, @RequestParam Integer lifeCycle) {
+        try{
+            if (taskService.changeTaskLifeRecyle(taskId, JobLifeCycle.get(lifeCycle))) {
+                return Result.succeed(lifeCycle == 2 ? Status.PUBLISH_SUCCESS : Status.OFFLINE_SUCCESS);
+            } else {
+                return Result.failed(lifeCycle == 2 ? Status.PUBLISH_FAILED : Status.OFFLINE_FAILED);
+            }
+        }catch (Exception e){
+            return Result.failed((lifeCycle == 2 ? Status.PUBLISH_FAILED : Status.OFFLINE_FAILED) + e.getMessage());
         }
+
     }
 
     @PostMapping("/explainSql")
