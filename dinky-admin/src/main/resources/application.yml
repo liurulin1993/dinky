@@ -8,7 +8,7 @@ server:
 spring:
   # Dinky application name
   application:
-    name: Dinky
+    name: uniplore-data-works
   profiles:
     # The h2 database is used by default. If you need to use other databases, please set the configuration active to: mysql, currently supports [mysql, pgsql, h2]
     # If you use mysql database, please configure mysql database connection information in application-mysql.yml
@@ -20,16 +20,21 @@ spring:
   sql:
     init:
       encoding: utf-8
-      mode: always
       platform: mysql
-      username: root
-      password: 123456
+      username: ${uniplore.config.datasource.username:root}
+      password: ${uniplore.config.datasource.password:123456}
       data-locations: classpath:init-sql/dinky.sql
+      mode: ${uniplore.config.initsql.mode:never}
+      #可选项：
+      #always:表示Spring Boot应用启动时始终执行数据库初始化
+      #embedded:表示只初始化内存数据库，比如H2数据库
+      #never:表示从不执行初始化数据库
 
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.2.35:8848
+        server-addr: ${uniplore.config.nacos.server-addr:localhost:8848}
+        namespace: ${uniplore.config.nacos.namespace:public}
   # mvc config
   mvc:
     pathmatch:
@@ -165,9 +170,9 @@ sa-token:
 ################################################# knife4j Config ################################################
 #################################################################################################################
 knife4j:
-  enable: true
+  enable: ${uniplore.config.knife4j.enable:true}
   setting:
-    language: en
+    language: zh_cn
 
 sms:
   is-print: false
