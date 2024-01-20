@@ -50,26 +50,27 @@ public class TenantInterceptor implements AsyncHandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler)
             throws Exception {
+        //设置租户id为默认10000
         TenantContextHolder.set(10000);
-        boolean isPass = false;
-        Cookie[] cookies = request.getCookies();
-        Opt<String> token = Opt.empty();
-        if (Asserts.isNotNull(cookies)) {
-            for (Cookie cookie : cookies) {
-                switch (cookie.getName()) {
-                    case "satoken":
-                        token = Opt.ofBlankAble(cookie.getValue());
-                        if (SaManager.getSaTokenDao().get("satoken:login:token:" + token.get()) != null) {
-                            isPass = true;
-                        }
-                        break;
-                    case "tenantId":
-                        int finalTenantId = 10000;
-                        TenantContextHolder.set(finalTenantId);
-                        break;
-                }
-            }
-        }
+//        boolean isPass = false;
+//        Cookie[] cookies = request.getCookies();
+//        Opt<String> token = Opt.empty();
+//        if (Asserts.isNotNull(cookies)) {
+//            for (Cookie cookie : cookies) {
+//                switch (cookie.getName()) {
+//                    case "satoken":
+//                        token = Opt.ofBlankAble(cookie.getValue());
+//                        if (SaManager.getSaTokenDao().get("satoken:login:token:" + token.get()) != null) {
+//                            isPass = true;
+//                        }
+//                        break;
+//                    case "tenantId":
+//                        int finalTenantId = 10000;
+//                        TenantContextHolder.set(finalTenantId);
+//                        break;
+//                }
+//            }
+//        }
         return AsyncHandlerInterceptor.super.preHandle(request, response, handler);
     }
 }
