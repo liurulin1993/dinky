@@ -23,7 +23,13 @@ import { METHOD_CONSTANTS } from '@/services/constants';
 import { PublicParams } from '@/services/data';
 
 // ============================ CRUD REQUEST ============================
-
+// const arr = window.location.hash.split("?")
+// if(arr>=2){
+//
+// }
+// const token = window.location.hash.split("?")[1].split("=")[1];
+// const headers = {'Uniplore-Auth':token}
+// console.log(headers)
 /**
  * query list
  * @param url
@@ -66,7 +72,7 @@ export async function removeById(url: string, params: any) {
   });
 }
 
-export async function getData(url: string, params?: any, headers?: any) {
+export async function getData(url: string, params?: any) {
   return request(url, {
     method: METHOD_CONSTANTS.GET,
     params: {
