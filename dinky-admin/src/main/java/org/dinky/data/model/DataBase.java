@@ -155,6 +155,7 @@ public class DataBase extends SuperEntity<DataBase> {
             dataBase.setType("PostgreSql");
             url = "jdbc:postgresql://" + config.getString("hostname") + ":" + config.getString("port") + "/" + config.getString("databaseName");
         }else if("MSSQL".equals(type)){
+            dataBase.setType("SqlServer");
             url = "jdbc:sqlserver://" + config.getString("hostname") + ":" + config.getString("port") + ";DatabaseName=" + config.getString("databaseName");
         }else if("ORACLE".equals(type)){
             url = "jdbc:oracle:thin:@" + config.getString("hostname") + ":" + config.getString("port") + "/" + config.getString("databaseName");
