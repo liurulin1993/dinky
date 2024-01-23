@@ -61,7 +61,8 @@ export function patchRoutes({ routes }: any) {
 }
 
 const queryUserInfo = async () => {
-  return getDataByParamsReturnResult(API_CONSTANTS.CURRENT_USER,{}).then((result) => {
+  const token = window.location.hash.split("?")[1].split("=")[1];
+  return getDataByParamsReturnResult(API_CONSTANTS.CURRENT_USER,{},{'Uniplore-Auth':token}).then((result) => {
     const { nickName, avatar, realName } = result.data;
     const currentUser: API.CurrentUser = {
       user: {
